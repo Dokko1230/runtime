@@ -792,7 +792,6 @@ global.Number = function (ths, n)
       getmetatable(ths).__primitive = n;
     end
     -- return the object
-    global.console:warn("Returning the object");
     return ths;
   -- this is just a function
   else
@@ -847,7 +846,15 @@ end
 -- Object
 
 global.Object = function (this, obj)
-  return obj or js_obj({})
+  if type(obj) == 'number' then
+    return js_new(global.Number, obj)
+  elseif type(obj) == 'string' then
+    return js_new(global.String, obj)
+  elseif type(obj) == 'boolean' then
+    return js_new(global.Boolean, obj);
+  else
+    return obj or js_obj({})
+  end
 end
 global.Object.prototype = obj_proto
 obj_proto.constructor = global.Object
